@@ -1,0 +1,106 @@
+#include<ESP8266WiFi.h>
+#include "DHT.h"
+#include <ThingSpeak.h>
+
+ char ssid[] = "Wi-Fi House 2,4G";
+ char pass[] = "DC8987SC01071105";
+ int status = WL_IDLE_STATUS;
+ WiFiClient client;
+
+ //THINGSPEAK
+ unsigned long myChannelNumber = 1512831 ;
+ const char * myWriteAPIKey = "FOO4L91V7ENPY32V";
+ const int updateThingSpeakInterval = 1 * 1000;
+
+ #define DHTPIN D4
+ #define DHTTYPE DHT22
+ DHT dht(DHTPIN, DHTTYPE);
+
+ #define anemometro D3
+ 
+//Variabili
+float temperatura = 0.0;
+float umidita = 0.0;
+float Velocita_Vento = 0.0;
+float rotazione = 0.0;
+float Time = 0.0;
+
+//Prototipi funzioni
+void getDati();
+void VisualizzaSeriale();
+void InviaDati();
+void Rotazioni();
+void CalcolaVelocita();
+
+
+void setup() {
+  Serial.begin(115200);
+  dht.begin();
+  WiFi.begin(ssid,pass);
+  while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+  }
+  Serial.println("WiFi connesso");
+  Serial.println("indirizzo IP: ");
+  Serial.println(WiFi.localIP());
+  while (!Serial) continue;
+  attachInterrupt(digitalPinToInterrupt(anemometro), Rotazioni, FALLING);//Anemometro
+
+  ThingSpeak.begin(client);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  getDati();
+  VisualizzaSeriale();
+  InviaDati();
+  Serial.println("Vado a dormire per 10 minuti circa");
+  ESP.deepSleep(6e8);
+}
+
+void getDati(){
+  temperatura = dht.readTemperature();
+  umidita = dht.readHumidity();
+}
+
+void VisualizzaSeriale(){
+  Serial.print("Sei connesso alla rete: "); 
+  Serial.print(ssid);
+  Serial.print("con IP: "); Serial.println(WiFi.localIP());
+  Serial.println();
+  Serial.print("Temperatura: "); Serial.print(temperatura); Serial.println(" °C");
+  Serial.println();
+  Serial.print("Umidita': "); Serial.print(umidita); Serial.println(" %");
+  Serial.println();
+  Serial.print("Velocita' vento: "); Serial.print(Velocita_Vento); Serial. println(" km/h");
+  
+}
+
+void InviaDati(){
+  Serial.println("Invio dati a Thingspeak");
+  ThingSpeak.setField(1, (float)temperatura);
+  ThingSpeak.setField(2, (float)umidita);
+  ThingSpeak.setField(3, (float)Velocita_Vento);
+  ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+  delay(updateThingSpeakInterval);
+}
+
+void Rotazioni(){
+  if ((millis() - Time) > 15 ) { 
+        rotazione++;
+        Time = millis();
+    }
+}
+
+void CalcolaVelocita(){
+  rotazione = 0; 
+  sei(); 
+  delay (3000); 
+  cli(); 
+  Velocita_Vento = rotazione * 0.75;
+  Velocita_Vento = rotazione * 1,60934; //conversione in km/h
+  Serial.print("Rotazioni ");
+  Serial.println(rotazione);
+}
