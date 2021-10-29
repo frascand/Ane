@@ -26,8 +26,8 @@ float vento=0;
  #define DHTPIN 4
  #define DHTTYPE DHT22
  DHT dht(DHTPIN, DHTTYPE);
- #define BOTtoken "XXXXXXXXXX:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
- #define CHAT_ID "XXXXXXXXXX"
+ #define BOTtoken "2056781967:AAFHDrCkS_3gzPqYPKTM3aM9NGeDFjnjK2Q"
+ #define CHAT_ID "831226200"
 
  UniversalTelegramBot bot(BOTtoken, client);
 
@@ -61,6 +61,7 @@ void setup() {
   Serial.println(WiFi.localIP());
   while (!Serial) continue;
   ThingSpeak.begin(client);
+  bot.sendMessage(CHAT_ID, "Bot started up", "");
   pinMode(WIND_SPD_PIN, INPUT);     
   attachInterrupt(digitalPinToInterrupt(WIND_SPD_PIN), windTick, FALLING);
   
@@ -73,7 +74,7 @@ void loop() {
   InviaDati();
   vento=0;
   Serial.println("Vado a dormire per 10 minuti circa");
-  ESP.deepSleep(6e8);
+  //ESP.deepSleep(6e8);
 }
 
 void getDati(){
@@ -126,4 +127,4 @@ float Vento(){
     bot.sendMessage(CHAT_ID, "Attenzione", "");
   }
   }
-     
+   
