@@ -43,7 +43,7 @@ void getDati();
 void VisualizzaSeriale();
 void InviaDati();
 float Vento();
-void windTick(void)
+void ICACHE_RAM_ATTR windTick(void)
     {
       timeSinceLastTick = millis() - lastTick;
       lastTick = millis();
