@@ -1,9 +1,9 @@
 #include<ESP8266WiFi.h>
 #include "DHT.h"
 #include <ThingSpeak.h>
-#include <ArduinoOTA.h>
-#include <UniversalTelegramBot.h>
-#include <ArduinoJson.h>
+#include "CTBot.h"
+
+
 
  char ssid[] = "Wi-Fi House 2,4G";
  char pass[] = "DC8987SC01071105";
@@ -26,11 +26,12 @@ float vento=0;
  #define DHTPIN 4
  #define DHTTYPE DHT22
  DHT dht(DHTPIN, DHTTYPE);
- #define BOTtoken "2056781967:AAFHDrCkS_3gzPqYPKTM3aM9NGeDFjnjK2Q"
- #define CHAT_ID "831226200"
 
- UniversalTelegramBot bot(BOTtoken, client);
 
+//TELEGRAM
+#define BOT_TOKEN "2056781967:AAFHDrCkS_3gzPqYPKTM3aM9NGeDFjnjK2Q"
+ int64_t CHAT_ID = 831226200;
+ CTBot myBot;
  
 //Variabili
 float temperatura = 0.0;
@@ -60,11 +61,16 @@ void setup() {
   Serial.println("indirizzo IP: ");
   Serial.println(WiFi.localIP());
   while (!Serial) continue;
+  myBot.wifiConnect(ssid, pass);
+  myBot.setTelegramToken (BOT_TOKEN);
   ThingSpeak.begin(client);
-  bot.sendMessage(CHAT_ID, "Bot started up", "");
   pinMode(WIND_SPD_PIN, INPUT);     
   attachInterrupt(digitalPinToInterrupt(WIND_SPD_PIN), windTick, FALLING);
-  
+  if (myBot.testConnection())
+Serial.println("\ntestConnection OK");
+else
+Serial.println("\ntestConnection NOK");
+
 }
 
 void loop() {
@@ -74,7 +80,7 @@ void loop() {
   InviaDati();
   vento=0;
   Serial.println("Vado a dormire per 10 minuti circa");
-  //ESP.deepSleep(6e8);
+  ESP.deepSleep(6e8);
 }
 
 void getDati(){
@@ -91,12 +97,16 @@ void VisualizzaSeriale(){
 }
 
 void InviaDati(){
+ Serial.println("Invio dati a Telegram");
+String data = "Ciao, la Temperatura è di " + String(temperatura) + " Pa e l'Umidità è del " + String(umidita) + "%";
+ myBot.sendMessage(CHAT_ID, data);
   Serial.println("Invio dati a Thingspeak");
   ThingSpeak.setField(1, (float)temperatura);
   ThingSpeak.setField(2, (float)umidita);
   ThingSpeak.setField(3, (float)vento);
   ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
   delay(updateThingSpeakInterval);
+  
 }
 
 float Vento(){
@@ -123,8 +133,5 @@ float Vento(){
         if (timeSinceLastTick != 0) windSpeed = 1000.0/timeSinceLastTick;
       }
      return(windSpeed);
-     if(temperatura < 10){
-    bot.sendMessage(CHAT_ID, "Attenzione", "");
   }
-  }
-   
+     
