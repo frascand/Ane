@@ -5,8 +5,8 @@
 
 
 
- char ssid[] = "Wi-Fi House 2,4G";
- char pass[] = "DC8987SC01071105";
+ char ssid[] = "";
+ char pass[] = "";
  int status = WL_IDLE_STATUS;
  WiFiClient client;
 
@@ -20,7 +20,7 @@ float vento=0;
 
  //THINGSPEAK
  unsigned long myChannelNumber = 1512831 ;
- const char * myWriteAPIKey = "FOO4L91V7ENPY32V";
+ const char * myWriteAPIKey = "V";
  const int updateThingSpeakInterval = 1 * 1000;
 
  #define DHTPIN 4
@@ -29,8 +29,8 @@ float vento=0;
 
 
 //TELEGRAM
-#define BOT_TOKEN "2056781967:AAFHDrCkS_3gzPqYPKTM3aM9NGeDFjnjK2Q"
- int64_t CHAT_ID = 831226200;
+#define BOT_TOKEN ""
+ int64_t CHAT_ID = ;
  CTBot myBot;
  
 //Variabili
