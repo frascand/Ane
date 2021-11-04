@@ -1,7 +1,6 @@
 #include<ESP8266WiFi.h>
 #include "DHT.h"
 #include <ThingSpeak.h>
-#include <ArduinoOTA.h>
 
  char ssid[] = "Wi-Fi House 2,4G";
  char pass[] = "DC8987SC01071105";
