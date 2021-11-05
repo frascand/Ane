@@ -3,7 +3,7 @@
 #include <ThingSpeak.h>
 
  char ssid[] = "Wi-Fi House 2,4G";
- char pass[] = "DC8987SC01071105";
+ char pass[] = "";
  int status = WL_IDLE_STATUS;
  WiFiClient client;
 
@@ -17,7 +17,7 @@ float vento=0;
 
  //THINGSPEAK
  unsigned long myChannelNumber = 1512831 ;
- const char * myWriteAPIKey = "FOO4L91V7ENPY32V";
+ const char * myWriteAPIKey = "V";
  const int updateThingSpeakInterval = 1 * 1000;
 
  #define DHTPIN 4
