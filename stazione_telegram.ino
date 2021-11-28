@@ -7,10 +7,10 @@
 
  / Wifi network station credentials
 #define WIFI_SSID "Wi-Fi House 2,4G"                    //inserire SSID WIFI
-#define WIFI_PASSWORD "DC8987SC01071105"                //inserire PASSWORD WIFI
+#define WIFI_PASSWORD ""                //inserire PASSWORD WIFI
 
 // Telegram BOT Token (Get from Botfather)
-#define BOT_TOKEN "2131179233:AAEe0IXFghY-Qxx8Lu2lTVFDer4GmddM-pE"                   //Inserire bot Telegram
+#define BOT_TOKEN ""                   //Inserire bot Telegram
 
 
 const unsigned long BOT_MTBS = 1000; // mean time between scan messages
@@ -29,7 +29,7 @@ float vento=0;
 
  //THINGSPEAK
  unsigned long myChannelNumber = 1512831 ;
- const char * myWriteAPIKey = "FOO4L91V7ENPY32V";
+ const char * myWriteAPIKey = "";
  const int updateThingSpeakInterval = 1 * 1000;
 
  #define DHTPIN 4
