@@ -27,7 +27,7 @@ unsigned long bot_lasttime; // last time messages' scan has been done
 volatile unsigned long timeSinceLastTick = 0;
 volatile unsigned long lastTick = 0;    
 long secsClock = 0;
-//float vento=0;
+
 
 #define DHTPIN 2
 #define DHTTYPE DHT22
@@ -97,10 +97,9 @@ void setup() {
 
 void loop() {
    getDati();
-  //Pressione();
   VisualizzaSeriale(); 
   Serial.println("Vado a dormire per 10 minuti circa");
-  //ESP.deepSleep(30e6);
+  ESP.deepSleep(30e6);
   {
   }
 }
