@@ -8,13 +8,15 @@
 
 
 #define WIFI_SSID "Wi-Fi House 2,4G"                    //inserire SSID WIFI
-#define WIFI_PASSWORD ".."                //inserire PASSWORD WIFI
+#define WIFI_PASSWORD "DC8987SC01071105"                //inserire PASSWORD WIFI
  
 
 // Telegram BOT Token (Get from Botfather)
-#define BOT_TOKEN ".."                   //Inserire bot Telegram
+#define BOT_TOKEN "2131179233:AAEe0IXFghY-Qxx8Lu2lTVFDer4GmddM-pE"                   //Inserire bot Telegram
 #define chat_ID  "831226200"                                                                 //INSERIRE ID CHAT
 
+#define intervallo 10000
+long previousMillis = 0;
 
 const unsigned long BOT_MTBS = 1000; // mean time between scan messages
 X509List cert(TELEGRAM_CERTIFICATE_ROOT);
@@ -27,7 +29,7 @@ unsigned long bot_lasttime; // last time messages' scan has been done
 volatile unsigned long timeSinceLastTick = 0;
 volatile unsigned long lastTick = 0;    
 long secsClock = 0;
-
+//float vento=0;
 
 #define DHTPIN 2
 #define DHTTYPE DHT22
@@ -61,6 +63,7 @@ void setup() {
  dht.begin();
  Wire.begin();
  bmx280.begin();
+ bmx280.resetToDefaults();
 
  delay(5000);
     Serial.println();
@@ -89,18 +92,19 @@ void setup() {
   }
   Serial.println(now);
   
- bmx280.resetToDefaults();
  bmx280.writeOversamplingPressure(BMx280I2C::OSRS_P_x16);
  pinMode(WIND_SPD_PIN, INPUT);
  attachInterrupt(digitalPinToInterrupt(WIND_SPD_PIN), windTick, FALLING);
 }
 
 void loop() {
-   getDati();
+  if (millis() - previousMillis > intervallo) {
+   previousMillis = millis();
+  Pressione();
+  Vento();
+  getDati();
   VisualizzaSeriale(); 
-  Serial.println("Vado a dormire per 10 minuti circa");
-  ESP.deepSleep(30e6);
-  {
+  
   }
 }
 
@@ -125,7 +129,6 @@ void VisualizzaSeriale(){
          data +=  "Pressione: " +String(pressure) +     " mPa \n";
          
   bot.sendMessage(chat_ID, data, "");
-  delay(30000);
 }
 
 float Pressione(){
