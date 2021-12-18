@@ -98,12 +98,11 @@ void setup() {
 }
 
 void loop() {
-  if (millis() - previousMillis > intervallo) {
-   previousMillis = millis();
   Pressione();
   Vento();
   getDati();
   VisualizzaSeriale(); 
+ ESP.deepSleep(10e6);
   
   }
 }
