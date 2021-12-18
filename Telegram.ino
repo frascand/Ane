@@ -15,9 +15,6 @@
 #define BOT_TOKEN "**"                   //Inserire bot Telegram
 #define chat_ID  "831226200"                                                                 //INSERIRE ID CHAT
 
-#define intervallo 10000
-long previousMillis = 0;
-
 const unsigned long BOT_MTBS = 1000; // mean time between scan messages
 X509List cert(TELEGRAM_CERTIFICATE_ROOT);
 WiFiClientSecure secured_client;
@@ -58,7 +55,7 @@ void ICACHE_RAM_ATTR windTick(void)
 
 
 void setup() {
-    Serial.begin(115200);
+  Serial.begin(115200);
 
  dht.begin();
  Wire.begin();
