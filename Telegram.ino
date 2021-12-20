@@ -55,12 +55,12 @@ void ICACHE_RAM_ATTR windTick(void)
 
 
 void setup() {
-  Serial.begin(115200);
-
- dht.begin();
+ pinMode(WIND_SPD_PIN, INPUT); 
+dht.begin();
  Wire.begin();
  bmx280.begin();
- bmx280.resetToDefaults();
+  Serial.begin(115200);
+bmx280.resetToDefaults();
 
  delay(5000);
     Serial.println();
@@ -90,7 +90,7 @@ void setup() {
   Serial.println(now);
   
  bmx280.writeOversamplingPressure(BMx280I2C::OSRS_P_x16);
- pinMode(WIND_SPD_PIN, INPUT);
+
  attachInterrupt(digitalPinToInterrupt(WIND_SPD_PIN), windTick, FALLING);
 }
 
