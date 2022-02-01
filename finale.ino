@@ -22,7 +22,8 @@ WiFiClientSecure secured_client;
 UniversalTelegramBot bot(BOT_TOKEN, secured_client);
 unsigned long bot_lasttime; // last time messages' scan has been done
 
-long momentoprima = 0;
+unsigned int ultimoMillis=0;
+unsigned int momentoprima = 0;
 #define intervallo 900000
 
 #define DHTPIN 2
@@ -100,19 +101,15 @@ void setup() {
 
 void loop() {
   Timer_ISR();
-  VisualizzaSeriale();
- /*/ if (millis() - momentoprima > intervallo ) {
-    momentoprima = millis();
+  momentoprima=millis();
+ if (momentoprima - ultimoMillis > intervallo ) {
+      ultimoMillis = millis();
       Pressione();
       getDati();
       Puntor();
-      VisualizzaSeriale();
-       
-  delay(5000);
- ESP.deepSleep(9e8);
-  {
-  }/*/
-  delay(5000);
+     
+}       
+  VisualizzaSeriale();
 }
 
 
